@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests\RequestRegister;
 use App\Http\Requests\RequestLogin;
 use App\Models\User;
-use App\helpers\Api;
+use App\Helpers\Api;
 use App\Traits\ResponseApi;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -83,7 +83,7 @@ class AuthControllers extends ApiController
         $data = $credentials;
 
         if($data['photo']) {
-        $data->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_Kelasku/public/storage/'.$data['photo'];
+        $data->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$data['photo'];
         } else {
             $data->photo = null;
         }
@@ -106,7 +106,7 @@ class AuthControllers extends ApiController
         $credentials = auth()->user();
  	    $data = $credentials;
         if($data['photo']) {
-           $data->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_Kelasku/public/storage/'.$data['photo'];
+           $data->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$data['photo'];
         } else {
            $data->photo = null;
         }

@@ -27,11 +27,6 @@ class AdminControllers extends Controller
         return view('pages/Admin',compact(['admin','data']));
     }
 
-
-    function createpage(){
-    return view ('');
-    }
-
     function create(request $request){
         
         $validator = $request->validate([
@@ -49,57 +44,85 @@ class AdminControllers extends Controller
         
         
             $data = [
-                'nama'=>$request->name,
+                'name'=>$request->name,
                 'email'=>$request->email,
                 'phone'=>$request->phone,
                 'password'=>Hash::make($request->password),
             ];
             
             Admin::create($data);    
-            return redirect('/dashboard');
+            return redirect('/admin');
     }
 
     function profileadminpage()
-    {  $data = session('admin_id');
+    {  $data = session('id');
     
-      $data = Admin::where('admin_id', $data)->first();
-        return view('/pages/profil',compact(['data']));
+      $data = Admin::where('id', $data)->first();
+
+      return view('/pages/profil',compact(['data']));
     }
-    
+
     function editprofileadmin(request $request) {
     
-        $data = session('admin_id');
+        $data = session('id');
     
-        $data = Admin::where('admin_id', $data)->first();
+        $data = Admin::where('id', $data)->first();
         $data->update([
             'name' =>($request->input('name')),
         ]);
     
-        return redirect('/profil')->with('Profil berhasil diperbarui');
+        return redirect('/profile/admin')->with('Profil berhasil diperbarui');
     }
     
     function editphotoprofil(request $request) {
     
-        $data = session('admin_id');
-    
-        $data = Admin::where('admin_id', $data)->first();
+        $data = session('id');
+        $data = Admin::where('id', $data)->first();
+
+        if($request->file('photo')) {
+            $photo =  $request->file('photo')->store('admin-profile_picture');
+            Admin::where('id',$data['id'])->update(['photo'=>$data['photo']]);
+        } else {
+            $photo= $data['photo'];}
 
         $data->update([
-            'photo' => ($request->file('photo'))
+            'photo' => $photo
         ]);
-    
-        if($request->file('photo')) {
-            $data['photo'] =  $request->file('photo')->store('admin-photo_profil');
-            Admin::where('admin_id',$data['admin_id'])->update(['photo'=>$data['photo']]);
-        }
        
-        return redirect('/profil')->with('Profil berhasil diperbarui');
+        return redirect('/profile/admin')->with('Profil berhasil diperbarui');
     }
 
+    function editadminpage($user_id)
+    {   
+        $data = Admin::find($user_id);
+        return view('/pages/EditAdmin',compact(['data']));
+    }
+
+    function editadmin(request $request, $user_id) {
+    
+        $data = Admin::find($user_id);
+        $name = $request->input('name');
+        $validatedData = $request->validate([
+            'photo' => 'nullable|image|max:3072'
+            ]);
+    
+        if($request->file('photo')) {
+            $photo =  $request->file('photo')->store('admin-profile_picture');
+            Admin::where('id',$data['id'])->update(['photo'=>$data['photo']]);
+        } else {
+            $photo= $data['photo'];}
+    
+         $data->update([
+            'name' => $name,
+            'photo' => $photo
+        ]);
+        return redirect('/admin');
+    }
+    
     function delete($id)
     {
-        $data= Aadmin::find($id);
+        $data= Admin::find($id);
         $data->delete($id);
-        return redirect('/dashboard');
+        return redirect('/admin');
     }
 }

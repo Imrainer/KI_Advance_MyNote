@@ -4,7 +4,7 @@ namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\ApiController;
-use App\helpers\Api;
+use App\Helpers\Api;
 use App\Models\Note;
 use App\Models\User;
 use App\Models\Categories;

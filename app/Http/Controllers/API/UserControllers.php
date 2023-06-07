@@ -5,17 +5,19 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
 use App\Http\Requests\RequestEditPassword;
-use App\helpers\Api;
+use App\Helpers\Api;
+
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Password;
 
 class UserControllers extends ApiController
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login','register']]);
+        $this->middleware('auth:api', ['except' => ['login','register','forgotPassword']]);
     }
 
     // <---MENAMPILKAN SEMUA USER--->
@@ -25,7 +27,7 @@ class UserControllers extends ApiController
 
     foreach ($users as $user) {
         if ($user->foto) {
-            $user->foto = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_Kelasku/public/storage/' . $user->foto;
+            $user->foto = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/' . $user->foto;
         }
     }
    return Api::createApi(200, 'success', $users);
@@ -53,7 +55,7 @@ class UserControllers extends ApiController
         }
 
         if ($user->foto) {
-            $user->foto = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_Kelasku/public/storage/' . $user->foto;
+            $user->foto = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/' . $user->foto;
         }
 
         $user->like_by_you = $like_by_you;
@@ -83,7 +85,7 @@ class UserControllers extends ApiController
         }
 
         if ($user && $user->foto) {
-            $user->foto = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_Kelasku/public/storage/' . $user->foto;
+            $user->foto = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/' . $user->foto;
         }
 
         $user->total_likes = Like::where('liked_by',$user)->count();
@@ -122,7 +124,7 @@ class UserControllers extends ApiController
         User::where('id',$data['id'])->update(['photo'=>$photo]);
 
         if($data['photo']) {
-            $data->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_Kelasku/public/storage/'.$data['photo'];
+            $data->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$data['photo'];
         } else {
             $data->photo = null;
         }
@@ -136,9 +138,9 @@ class UserControllers extends ApiController
         $user = User::where('id', $userId)->first();
         $user['password'] = Hash::make($requestEditPassword->new_password);
         $user->save();
-
         return Api::createApi(200, 'successfully updated password', $user);
     }
+    
 
     //<!---DELETE---!>
 
@@ -147,4 +149,5 @@ class UserControllers extends ApiController
         $data->delete($user_id);
         return Api::createApi(200, 'successfully deleted');
     }
+
 }
