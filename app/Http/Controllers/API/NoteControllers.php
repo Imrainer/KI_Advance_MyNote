@@ -24,6 +24,12 @@ class NoteControllers extends ApiController
             return $note;
         });
 
+        $photolink = $notes->map(function ($note) {
+            $photo = $note->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$note['photo'];
+            $note->photo = $photo;
+            return $note;
+        });
+
         return Api::createApi(200, 'success', $notes);
     }
 
@@ -37,24 +43,33 @@ class NoteControllers extends ApiController
     
         $favorite = $note->favorite === 1 ? true : false;
         $note->favorite = $favorite;
+
+        $photo = $note->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$note['photo'];
+        $note->photo = $photo;
+
         return Api::createApi(200, 'success', $note);
     }
 
     // <!---MEMBUAT NOTE---!>
     public function create(Request $request)
     {   $userId = Auth::id();
+        $validatedData = $request->validate([
+            'photo' => 'nullable|image|max:3072'
+            ]);
+
         $notes=[
             'title'=>$request->title,
             'content'=>$request->content,
             'categories_id'=>$request->categories_id,
             'created_by'=> $userId,
+            'photo' => null
         ];
-        
-        $formattedNotes = $notes->map(function ($note) {
-            $favorite = $note->favorite === 1 ? true : false;
-            $note->favorite = $favorite;
-            return $note;
-        });
+
+        if ($request->file('photo')) {
+            $photo = $request->file('photo')->store('user-note_picture');
+            $photoUrl = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$photo;
+            $notes['photo'] = $photoUrl;
+    }
 
         $notes['id'] = Str::uuid()->toString();
         
@@ -71,7 +86,7 @@ class NoteControllers extends ApiController
             ]);
        
         if ($request->file('photo')) {
-            $photo = $request->file('photo')->store('user-profile_picture');
+            $photo = $request->file('photo')->store('user-note_picture');
         } else {
             $photo = $notes['photo'];
         }
@@ -101,6 +116,12 @@ class NoteControllers extends ApiController
            'photo'=>$photo
         ]);
 
+        if($notes['photo']) {
+            $notes->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$notes['photo'];
+        } else {
+            $notes->photo = null;
+        }
+
         return Api::createApi(200, 'successfully updated note', $notes);
 
     }
@@ -123,28 +144,39 @@ class NoteControllers extends ApiController
          $notes->update([
             'favorite'=>1,
          ]);
+
+         $favorite = $notes->favorite === 1 ? true : false;
+          $notes->favorite = $favorite;
+
+         if($notes['photo']) {
+            $notes->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$notes['photo'];
+        } else {
+            $notes->photo = null;
+        }
  
          return Api::createApi(200, 'successfully favorited note', $notes);
      }
 
       // <!---MENGUNFAVORIT NOTE--!>
       public function unfavorite($uuid)
-      {  
-         
+      {
           $notes = Note::findOrFail($uuid);
   
           $notes->update([
              'favorite'=>null
           ]);
           
-        $formattedNotes = $notes->map(function ($note) {
-            $favorite = $note->favorite === 1 ? true : false;
-            $note->favorite = $favorite;
-            return $note;
-        });
+          $favorite = $notes->favorite === 1 ? true : false;
+          $notes->favorite = $favorite;
 
-          return Api::createApi(200, 'successfully unfavorited note', $notes);
-  
+          if($notes['photo']) {
+            $notes->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$notes['photo'];
+            } else {
+            $notes->photo = null;
+            }
+        
+        return Api::createApi(200, 'successfully unfavorited note', $notes);
+
       }
 
 }
