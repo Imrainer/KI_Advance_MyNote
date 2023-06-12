@@ -2,21 +2,23 @@
 <x-navbar></x-navbar>
 
 <style>
-
+body{
+  background-color: rgb(39, 38, 38)
+}
 .title {
-  color:  rgb(63, 197, 146);
+  color:  rgb(73, 108, 173);
   font-weight: bold
 }
 
 .button {
-  background-color:  rgb(63, 197, 146);
+  background-color:  rgb(73, 108, 173);
   color: white;
 }
 
 .button:hover{
   background-color: white;
-  outline:10px  rgb(63, 197, 146);
-  color:  rgb(63, 197, 146);
+  outline:10px  rgb(73, 108, 173);
+  color:  rgb(73, 108, 173);
 }
 
 </style>
@@ -25,35 +27,35 @@
 <div class="alert alert-success">{{ session('success') }}</div>
 @endif
 
-<div class=" d-flex justify-content-center mt-5">
-    @if (empty($data->foto))    
- <a>  <img src="{{ asset('storage/blank_user.png') }}"  alt="Profile Picture" width="300px" class="me-3 profil rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal"></a>
+<div class=" justify-content-center container  mt-5 bg-dark col-md-5 ">
+    @if (empty($data->photo))   
+    <div class="d-flex justify-content-center">
+<img src="{{ asset('storage/blank_user.png') }}"  alt="Profile Picture" width="300px" class="me-3 profil rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal"></div> 
     @else
-    <a>  <img src="{{ asset('storage/'. $data->foto) }}" alt="Profile Picture" width="300px" class="me-3 profil rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal"></a>
+    <div class="d-flex justify-content-center">
+   <img src="{{ asset('storage/'. $data->photo) }}" alt="Profile Picture" width="300px" class="me-3 profil rounded-circle" data-bs-toggle="modal" data-bs-target="#exampleModal"></div> 
     @endif
-<div class="ms-3">
-    {{-- @foreach ( $user as $user) --}}
-    <form action="http://localhost/laravel/public/editprofil-store" method="POST">
+<div class="ms-3 ">
+    <form action="http://localhost/laravel_tasknote/public/profile/edit-store" method="POST">
         @csrf @method('put')
         <div class="mb-3 mt-3">
             <label for="exampleInputEmail1" class="title form-label">Nama</label>
-            <input type="text" class="form-control"  value="{{$data->nama}}" name="nama">
+            <input type="text" class="form-control" value="{{$data->name}}" name="name">
           </div>
-        <div class="mb-3 mt-3">
+        {{-- <div class="mb-3 mt-3">
           <label for="exampleInputEmail1" class="title form-label">Email </label>
           <input type="email" class="form-control" value="{{$data->email}}"name="email">
-          <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-        </div>
+        </div> --}}
 
         <div class="mb-3 mt-3">
             <label for="exampleInputEmail1" class="title form-label">Nomor Telepon</label>
-            <input type="number" class="form-control" value="{{$data->nomor_telepon}}" name="nomor_telepon">
+            <input type="number" class="form-control" value="{{$data->phone}}" name="phone">
           </div>
           
         <div class="d-flex justify-content-center">
         <button type="submit" class="button btn">Submit</button>
     </div> 
-    {{-- @endforeach --}}
+
       </form>
    
     </div>
@@ -67,14 +69,14 @@
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-            <form action="http://localhost/laravel/public/editprofilpict" method="POST" enctype="multipart/form-data">
+            <form action="http://localhost/laravel_tasknote/public/profile/edit-photo" method="POST" enctype="multipart/form-data">
                 @csrf @method('put')
             <div class="mb-3 mt-3">
-                {{-- <label for="exampleInputEmail1" class="form-label">File</label> --}}
-                <input type="file" class="form-control" name="foto">
+                
+                <input type="file" class="form-control" name="photo">
               </div>
             <div class="d-flex justify-content-center mt-5">
-             <button type="submit" class="btn btn-primary">Confirm</button>
+             <button type="submit" class="button btn">Confirm</button>
             </div>
             </form>
         </div>

@@ -1,11 +1,11 @@
-<x-layout title="Edit User">
+<x-layout title="Add New">
    
     <div class="container col-md-5">
       @foreach ( $data as $item)
-      <form action="http://localhost/laravel_tasknote/public/user/edit-store/{{$data->id}}" method="POST" enctype="multipart/form-data" class="card p-3 mt-3">
+      <form action="http://localhost/laravel_tasknote/public/admin/edit-store/{{$data->id}}" method="POST" enctype="multipart/form-data" class="card p-3 mt-3">
         @csrf @method('put')
         @endforeach
-        <h3> Form Edit User </h3>
+        <h3> Form Edit Admin </h3>
         <div class="mb-3">
           <label for="exampleInputEmail1" class="form-label">Nama</label>
           <input type="text" class="form-control"  value="{{$data->name}}" name="name" id="exampleInputEmail1">
@@ -20,5 +20,3 @@
       </form>
 </div>
 </x-layout>
-
-
