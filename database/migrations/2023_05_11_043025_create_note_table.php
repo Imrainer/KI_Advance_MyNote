@@ -19,7 +19,7 @@ class CreateNoteTable extends Migration
             $table->text('content')->nullable();
             $table->uuid('created_by', 120);
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            $table->unsignedBigInteger('categories_id')->nullable();
+            $table->uuid('categories_id',120)->nullable();
             $table->foreign('categories_id')->references('id')->on('categories')->onDelete('cascade');
             $table->string('photo')->default(null)->nullable();
             $table->boolean('favorite')->default(null)->nullable();
