@@ -18,8 +18,8 @@ class CreateCategoriesTable extends Migration
             $table->string('category');
             $table->uuid('created_by', 120);
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
-            // $table->string('created_by');
-            $table->timestamps();
+            $table->timestamp('created_at')->default(DB::raw('CURRENT_TIMESTAMP'));
+            $table->timestamp('updated_at')->default(DB::raw('CURRENT_TIMESTAMP'));
         });
     }
 

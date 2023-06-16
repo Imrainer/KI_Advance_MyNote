@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 
 class NoteControllers extends ApiController
-{
+{   
     // <!--MENAMPILKAN NOTE SESUAI USER YANG LOGIN--!>
     public function index()
     {   $userId = Auth::user()->id;
@@ -21,12 +21,13 @@ class NoteControllers extends ApiController
         $formattedNotes = $notes->map(function ($note) {
             $favorite = $note->favorite === 1 ? true : false;
             $note->favorite = $favorite;
-            return $note;
-        });
-
-        $photolink = $notes->map(function ($note) {
-            $photo = $note->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$note['photo'];
+        
+            $note->created_at_formatted = date('Y-m-d H:i:s', strtotime($note->created_at));
+            $note->updated_at_formatted = date('Y-m-d H:i:s', strtotime($note->updated_at));
+        
+            $photo = $note->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/' . $note['photo'];
             $note->photo = $photo;
+            
             return $note;
         });
 
@@ -43,6 +44,9 @@ class NoteControllers extends ApiController
     
         $favorite = $note->favorite === 1 ? true : false;
         $note->favorite = $favorite;
+
+        $note->created_at_formatted = date('Y-m-d H:i:s', strtotime($note->created_at));
+        $note->updated_at_formatted = date('Y-m-d H:i:s', strtotime($note->updated_at));
 
         $photo = $note->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$note['photo'];
         $note->photo = $photo;

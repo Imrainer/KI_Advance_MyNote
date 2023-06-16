@@ -29,4 +29,14 @@ class Note extends Model
     public function categories() {
         return $this->belongsTo(Categories::class, 'category_id');
     } 
+
+    public function getCreatedAtAttribute($value)
+    {
+        return date('YmdHis', strtotime($value));
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return date('YmdHis', strtotime($value));
+    }
 }

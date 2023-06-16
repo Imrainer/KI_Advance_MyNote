@@ -27,4 +27,13 @@ class Categories extends Model
         return $this->hasMany(Note::class);
     } 
 
+    public function getCreatedAtAttribute($value)
+    {
+        return date('YmdHis', strtotime($value));
+    }
+
+    public function getUpdatedAtAttribute($value)
+    {
+        return date('YmdHis', strtotime($value));
+    }
 }
