@@ -25,9 +25,13 @@ class NoteControllers extends ApiController
             $note->created_at_formatted = date('Y-m-d H:i:s', strtotime($note->created_at));
             $note->updated_at_formatted = date('Y-m-d H:i:s', strtotime($note->updated_at));
         
-            $photo = $note->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/' . $note['photo'];
-            $note->photo = $photo;
-            
+            $photo = $note->photo;
+            if ($photo === null) {
+                $note->photo = null;
+            } else {
+                $note->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/' . $photo;
+            }
+
             return $note;
         });
 
@@ -48,8 +52,12 @@ class NoteControllers extends ApiController
         $note->created_at_formatted = date('Y-m-d H:i:s', strtotime($note->created_at));
         $note->updated_at_formatted = date('Y-m-d H:i:s', strtotime($note->updated_at));
 
-        $photo = $note->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$note['photo'];
-        $note->photo = $photo;
+        $photo = $note->photo;
+        if ($photo === null) {
+            $note->photo = null;
+        } else {
+            $note->photo = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/' . $photo;
+        }
 
         return Api::createApi(200, 'success', $note);
     }
@@ -71,8 +79,7 @@ class NoteControllers extends ApiController
 
         if ($request->file('photo')) {
             $photo = $request->file('photo')->store('user-note_picture');
-            $photoUrl = 'https://magang.crocodic.net/ki/Rainer/KI_Advance_MyNote/public/storage/'.$photo;
-            $notes['photo'] = $photoUrl;
+            $notes['photo'] = $photo;
     }
 
         $notes['id'] = Str::uuid()->toString();
